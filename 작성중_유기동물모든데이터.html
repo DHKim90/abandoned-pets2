@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>모든데이터_유기동물</title>
+
+
+    <!-- script의 integrity(진실성)이 다르니 확인할 것 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/x2js/1.2.0/xml2json.min.js"
+        integrity="sha512-HX+/SvM7094YZEKOCtG9EyjRYvK8dKlFhdYAnVCGNxMkA59BZNSZTZrqdDlLXp0O6/NjDb1uKnmutUeuzHb3iQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+</head>
+
+<body>
+
+    <button id="reqBtn">모든 데이터 요청 시작</button>
+    <div id="monitor"></div>
+
+    <script>
+        // let(~하게 두자), ch03_javascript_01_javascript기본문법.html
+        let v_monitor = document.getElementById('monitor');
+
+        let pageNo = 1;
+        let v_array = [];
+
+        // dcument(문서), Element(요소), addEventListener(이벤트를 듣고 있는 함수를 더해줄께~)
+        document.getElementById('reqBtn').addEventListener('click', () => {
+            f_reqData();
+        });
+
+        function f_reqData() { // 이 문장이 중복되어 있으면 안됨 그래서 아까 그 오류가 뜬것임
+
+            let v_url = 'http://apis.data.go.kr/6300000/animalDaejeonService/animalDaejeonList'; /*URL*/
+            let v_query = "?serviceKey=3Dr9sy93DIXa1FQn8LLi3yGb4%2BbpUevAlD4n9VqFUpwOK1RVOdXg8rDhfpIWWGjSzrDpTZTZvPFIAQKb1PoViA%3D%3D"; /*Service Key*/
+            v_query += "&numOfRows=100&type=json";
+            v_query += "&pageNo=" + pageNo;
+
+            $.ajax({
+                url: v_url + v_query,// 쿼~워~뤼~이~
+                method: 'GET',
+                success: function (response) {
+                    console.log(response);
+
+                    // response를 넣었을 때 items에서 오류생김
+                    let v_x2js = new X2JS();
+                    // xml포맷을 json포맷으로 변환
+                    let v_json = v_x2js.xml2json(response);
+                    console.log(v_json);
+                    console.log(JSON.stringify(v_json));
+                    // v_json으로 변환 시켰는데 xml포맷인 response를 써서 문제였음
+                    // json포맷으로 변환 
+                    // stringify(문자열화하다)
+
+                    // localStorage(저장소)는 문자열 데이터만 저장 가능
+                    localStorage.setItem("animalList", JSON.stringify(v_json));
+
+                    console.log(v_json);
+                    console.log(v_json['ServiceResult']);
+                    // v_json도 오류.. JSON.stringify(v_json)도 오류.. 
+                    // localStorage(저장소)오류.. 대문자 JSON도 오류..
+                    // animalList도 오류..
+                    // body는 된다 근데 items는 인식이 안돼 왜?? body안에 존재하지 않는다는 것인데...
+                    console.log(v_json['ServiceResult']['MsgBody']);
+                    console.log(v_json['ServiceResult']['MsgBody']['items']);
+
+
+                }
+
+            });
+
+        }
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상세_유기동물</title>
+
+    <style>
+        .container {
+            width: 1000px;
+            margin: auto;
+            border: 1px solid black;
+
+            display: flex;
+        }
+
+        .img-box {
+            width: 50%;
+        }
+
+        .img-box>img {
+            width: 100%;
+        }
+
+        .item-info {
+            width: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 명칭을 적어야하나? -->
+    <!-- classification(분류) -->
+    <!-- fileNm: 관리번호.jpg -->
+    <div class="container">
+        <div class="img-box">
+            <img src="" alt="">
+        </div>
+        <div class="item-info">
+            <div id="animalSeq">
+                <!-- 게시물번호 -->
+                <!-- 이걸로 사용하니까 반복되는 글자들 없고 깔끔하게 나옴 -->
+            </div>
+            <div id="classification">
+                <!-- 유기동물구분(1:개, 2:고양이, 3:기타동물) -->
+            </div>
+            <div id="species">
+                <!-- 동물종구분 -->
+            </div>
+            <div id="gender">
+                <!-- 성별구분(1:암, 2:수) -->
+            </div>
+            <div id="regId">
+                <!-- 동물등록번호 -->
+                관리번호:
+            </div>
+        </div>
+
+        <script>
+
+            // 모든데이터 불러오기 성공
+
+            let v_animalList = JSON.parse(localStorage.getItem("animalList"));
+
+            console.log(v_animalList);
+
+
+            // 한줄에 다 적어도 동작됨
+            //[]안에 ''과 ""는 차이가 없음
+            let v_items = v_animalList['ServiceResult']["MsgBody"]['items'];
+
+            // parameter(매개변수)
+            let urlSearch = new URLSearchParams(location.search);
+            console.log(urlSearch.get("animalSeq"));
+
+            for (let itm of v_items){
+                if (itm["animalSeq"] == urlSearch.get("animalSeq")){
+                    document.querySelector(".img-box > img").src = itm["filePath"];
+
+                    let v_divArray = document.querySelectorAll('.item-info > div');
+                    for (let i = 0; i < v_divArray.length; i++){
+                        v_divArray[i].innerHTML += itm[v_divArray[i].id];
+                    }
+                }
+            }
+
+        </script>
+
+</body>
+
+</html>

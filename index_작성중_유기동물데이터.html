@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>유기동물데이터</title>
+
+    <style>
+        /* width: auto */
+
+        /* overflow: hidden; */
+
+        .container {
+            width: 1300px;
+            margin: auto;
+            border: 1px solid black;
+            overflow: hidden;
+
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        /* text-align: center; */
+
+        /* display: table;  */
+
+        /* object-fit: scale-down; */
+
+        /* vertical(수직의) align(맞추다)
+            vertical-align: middle; */
+
+        /* display: table-cell; */
+
+        /* .image{ 
+            background-image: url("./");
+            background-size: cover;
+        }*/
+
+        /* display: inline-block; */
+
+        /* .container {
+        text-align: center;
+        display: table;
+        width: 280px;
+        height: 250px;
+        }
+        
+        .card {
+        display: table-cell;
+        vertical-align: middle;
+        }
+        
+        .card-top {
+        max-width: 180px;
+        max-height: 180px;
+        }*/
+
+        .card {
+            width: calc(100% / 3 - 50px);
+            height: 400px;
+            border: 1px solid black;
+            margin-bottom: 50px;
+            cursor: pointer;
+        }
+
+        .card-top {
+            height: 70%;
+            overflow: hidden;
+
+            display: flex;
+            justify-content: center;
+        }
+
+        .card-top>img {
+            height: 100%;
+        }
+
+        .card-bottom {
+            font-size: 24px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+
+    </div>
+
+    <script>
+        let v_animalList = JSON.parse(localStorage.getItem("animalList"));
+        console.log(v_animalList);
+
+        let v_items = v_animalList['ServiceResult']['MsgBody']['items'];
+        console.log(v_items);
+        console.log(v_items[0]);
+        // filePath가 .jpg
+        console.log(v_items[0]['filePath']);
+
+        let v_container = document.querySelector('.container');
+
+        let startIdx = 0;
+        let endIdx = 15;
+
+        let v_useItems = [];
+
+        for (let itm of v_items) {
+            if (itm["filePath"]) {
+                v_useItems.push(itm);
+            }
+        }
+
+        console.log(v_useItems);
+
+        // v_card에 나타내는 값들인가?
+        for (let i = startIdx; i < endIdx; i++) {
+            let v_card = '<div class="card" onclick="f_detail()">';
+                v_card += '     <input type="hidden" value="' + v_useItems[i]['animalSeq'] + '" />';
+                /* 오타확인! 오타확인! 오타확인! */
+                v_card += '         <div class="card-top">';
+                v_card += '             <img src="http://www.daejeon.go.kr/' + v_useItems[i]["filePath"] + '" alt="">';
+                v_card += '         </div>';
+                v_card += '         <div class="card-bottom">';
+                // classification(유기동물구분 1:개, 2:고양이, 3:기타동물)
+                // species에 json -> string 변환은 사용하는게 아니였다.
+                // gender(성별 1:암, 2:수, 3:중성화암, 4:중성화수, 5:알수없음)
+                // [1] = 암컷   [2] = 수컷  [3] = 중성화암컷    [4] = 중성화수컷    [5] = 알수없음
+                // v_card += (v_useItems[i]['gender']).toString();
+                // 성별 숫자를 문자로~, ch03_javascript_01_javascript기본문법.html
+                // 암컷 = ['gender'][1];
+                // 수컷 = ['gender'][2];
+                // 중성화암컷 = ['gender'][3];
+                // 중성화수컷 = ['gender'][4];
+                // 알수없음 = ['gender'][5];
+                // ch03_
+                v_card +=               v_useItems[i]['species'];
+                v_card +=               "|";
+                v_card +=               v_useItems[i]['gender'];
+                v_card += '             <br>'
+                v_card +=               "관리번호: " + v_useItems[i]['regId'];
+                v_card += '        </div>';
+                v_card += '</div>';
+                
+                
+                
+
+
+
+                
+                
+            v_container.innerHTML += v_card;
+        }
+
+
+        startIdx = endIdx;
+        endIdx = startIdx + 9;
+
+        window.onscroll = () => {
+            let v_docHeight = documnet.documentElement.scrollHeight;
+            let v_winHeight = documnet.documentElement.clientHeight;
+            let v_scrollTop = documnet.documentElement.scrollTop;
+
+            console.log('docHeight', v_docHeight);
+            console.log('winHeight', v_winHeight);
+            console.log('scrollTop', v_scrollTop);
+
+
+            if (v_winHeight + v_scrollTop >= v_docHeight * 0.9) {
+
+                if (startIdx >= v_uesItems.length) {
+                    return;
+                }
+
+                for (let i = startIdx; i < endIdx; i++) {
+                    let v_card = '<div class="card" onclick="f_detail()">';
+                        v_card += '     <input type="hidden" value="' + v_useitems[i]['animalSeq'] + '"/>';
+                        v_card += '         <div class="card-top">';
+                        v_card += '             <img src="http://www.daejeon.go.kr/' + v_useItems[i]["filePath"] + '" alt="">';
+                        v_card += '         </div>';
+                        v_card += '         <div class="card-bottom">';
+                        v_card +=               v_useItems[i]['species'];
+                        v_card +=               "|"
+                        v_card +=               v_useItems[1]['gender'];
+                        v_card += '             <br>'
+                        v_card +=               "관리번호" + v_useItems[i]['regId'];
+                        v_card += '         </div>';
+                        v_card += '</div>';
+
+                        console.log(str);
+
+                    v_container.innerHTML += v_card;
+                }
+
+                // 15개 존재
+                startIdx = endIdx;
+                endIdx = startIdx + 3;
+
+                if (endIdx > v_useItems.length) {
+                    endIdx = v_useItems.length;
+                }
+            }
+
+        };
+
+        function f_detail() {
+            // current(현재의)
+            // currentTarget: 이벤트 핸들러와 연결된 태그를 가리킴
+            /*이벤트 핸들러: 웹사이트를 사용하는 사용자가 HTML요소에 사건을 일으키는 행위
+            -> 로그인버튼클릭, 로그인하기위해 아이디를입력, 검색창에 검색키워드를입력, 스크롤
+            -> 이러한 이벤트가 발생할 때마다 특정 로직이 실행되도록 하는 것*/
+            // target: 이벤트를 발생시킨 태그
+            console.log(event.currentTarget);
+            console.log(event.currentTarget.children);
+
+            let v_children = event.currentTarget.children;
+
+            let v_animalSeq = v_children[0].value;
+            console.log(v_animalSeq);
+
+            // href(hypertext reference)는 페이지 이동
+            location.href = "./작성중_유기동물상세.html?animalSeq=" + v_animalSeq;
+        }
+
+
+        /*GET http://127.0.0.1:5500/ch04_data/FileUpload/ANI/202408/20240820045844642.jpg 404 (Not Found)
+        저 오류상태에서 ch04_data를 http://www.daejeon.go.kr로 수정해보자*/
+        /*20240820045844642.jpg:1
+        
+        
+        GET http://127.0.0.1:5500/www.daejeon.go.kr.html/FileUpload/ANI/202408/20240820045844642.jpg 404 (Not Found)
+        http://www.daejeon.go.kr에 http부분이 있으면 안됨*/
+
+        // 사진 정렬 완료~
+
+
+
+
+
+    </script>
+
+
+
+</body>
+
+</html>
